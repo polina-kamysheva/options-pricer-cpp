@@ -9,19 +9,29 @@ double blackScholesCall(double spot, double strike, double riskFreeRate, double 
     double d1 = (std::log(spot / strike) + (riskFreeRate + 0.5 * volatility * volatility) * timeToExpiry)
                 / (volatility * std::sqrt(timeToExpiry));
     double d2 = d1 - volatility * std::sqrt(timeToExpiry);
-
     return spot * normalCDF(d1) - strike * std::exp(-riskFreeRate * timeToExpiry) * normalCDF(d2);
 }
 
+double blackScholesPut(double spot, double strike, double riskFreeRate, double timeToExpiry, double volatility) {
+    double callPrice = blackScholesCall(spot, strike, riskFreeRate, timeToExpiry, volatility);
+    return callPrice - spot + strike * std::exp(-riskFreeRate * timeToExpiry);
+}
+
+ 
+
 int main() {
+
     double spot = 100.0;
     double strike = 100.0;
     double riskFreeRate = 0.05;
     double timeToExpiry = 1.0;
     double volatility = 0.2;
 
-    double price = blackScholesCall(spot, strike, riskFreeRate, timeToExpiry, volatility);
-    std::cout << "Call price: " << price << std::endl;
+    double callPrice = blackScholesCall(spot, strike, riskFreeRate, timeToExpiry, volatility);
+    double putPrice = blackScholesPut(spot, strike, riskFreeRate, timeToExpiry, volatility);
+
+    std::cout << "Call price: " << callPrice << std::endl;
+    std::cout << "Put price: " << putPrice << std::endl;
 
     return 0;
 }

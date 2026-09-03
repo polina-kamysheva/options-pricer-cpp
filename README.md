@@ -5,7 +5,7 @@ A C++ implementation of the Black-Scholes model, built from first principles and
 ## What it does
 
 - Determines whether a call or put option is in or out of the money, given a spot and strike price
-- Prices a European call option using the closed-form Black-Scholes formula
+- Prices European call and put options using the closed-form Black-Scholes formula, with the put derived via put-call parity
 - Computes the standard normal cumulative distribution function the model needs directly, via the C++ standard library's `erf`
 
 ## The model
@@ -26,6 +26,10 @@ where:
 - `sigma` — volatility (annualised)
 - `N(x)` — the standard normal cumulative distribution function
 
+The put price is derived from the call via put-call parity rather than recomputed from scratch:
+
+    P = C - S + K * e^(-rT)
+
 ## Requirements
 
 A C++17-compatible compiler (developed and tested with Apple clang 17).
@@ -40,12 +44,13 @@ A C++17-compatible compiler (developed and tested with Apple clang 17).
 Priced against a standard textbook example (S = 100, K = 100, r = 5%, T = 1 year, sigma = 20%):
 
     Call price: 10.4506
+    Put price: 5.57353
 
-The known reference value for this input set is 10.45, confirming the implementation is correct.
+Reference values for this input set are 10.45 and 5.57 respectively, confirming both implementations are correct.
 
 ## Roadmap
 
-- [ ] Put option pricing
+- [x] Put option pricing
 - [ ] Greeks (delta, gamma, vega, theta, rho)
 - [ ] Monte Carlo pricing
 - [ ] Binomial tree pricing
