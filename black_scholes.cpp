@@ -17,6 +17,16 @@ double blackScholesPut(double spot, double strike, double riskFreeRate, double t
     return callPrice - spot + strike * std::exp(-riskFreeRate * timeToExpiry);
 }
 
+double callDelta(double spot, double strike, double riskFreeRate, double timeToExpiry, double volatility) {
+    double d1 = (std::log(spot / strike) + (riskFreeRate + 0.5 * volatility * volatility) * timeToExpiry)
+                / (volatility * std::sqrt(timeToExpiry));
+    return normalCDF(d1);
+}
+
+double putDelta(double spot, double strike, double riskFreeRate, double timeToExpiry, double volatility) {
+    return callDelta(spot, strike, riskFreeRate, timeToExpiry, volatility) - 1.0;
+}
+
  
 
 int main() {
@@ -33,5 +43,11 @@ int main() {
     std::cout << "Call price: " << callPrice << std::endl;
     std::cout << "Put price: " << putPrice << std::endl;
 
+
+    double callDeltaValue = callDelta(spot, strike, riskFreeRate, timeToExpiry, volatility);
+    double putDeltaValue = putDelta(spot, strike, riskFreeRate, timeToExpiry, volatility);
+
+    std::cout << "Call delta: " << callDeltaValue << std::endl;
+    std::cout << "Put delta: " << putDeltaValue << std::endl;
     return 0;
 }
